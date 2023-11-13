@@ -36,7 +36,7 @@ class LoginController extends Controller
                 $adminlogin = User::where('email','=',$email)->first();
                 if(Hash::check( $password, $adminlogin->password)){
                     session()->put('login', $adminlogin);
-                    return redirect()->route('customers.index');
+                    return redirect()->route('manage-book.index');
                 } else {
                     return redirect()->back()->withInput()->with('error2', 'Login credential wrong!');
                 }

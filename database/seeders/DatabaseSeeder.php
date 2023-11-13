@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $userData     =   [
             [
-                'name' => 'Administrator',
+                'name' => 'Admin',
                 'email' => 'admin@admin.com ',
                 'password' => 'password',
                 'created_at' => date("Y-m-d H:i:s"),

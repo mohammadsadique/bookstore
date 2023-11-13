@@ -2,7 +2,7 @@
     <img src="{{URL('/')}}/custom/loader.gif" alt="Loading...">
 </div>
 <footer class="main-footer">
-    <strong>Copyright &copy; @php date('Y') @endphp <a href="#">CRM</a>.</strong>
+    <strong>Copyright &copy; @php date('Y') @endphp <a href="#">Bookstore</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 1.0

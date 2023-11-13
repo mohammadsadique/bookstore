@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\Customer;
 
-class CustomerController extends Controller
+class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class CustomerController extends Controller
     public function index()
     {
         $custData = Customer::orderBy('id','desc')->get();
-        return view('customer', compact('custData'));
+        return view('book', compact('custData'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customer');
+        return view('book');
         
     }
 
@@ -44,10 +44,10 @@ class CustomerController extends Controller
     
         if(!empty($request->id)){
             $customer = Customer::find($request->id);
-            $msg = 'Customer updated successfully.';
+            $msg = 'Book updated successfully.';
         } else {
             $customer = new Customer;
-            $msg = 'Customer added successfully.';
+            $msg = 'Book added successfully.';
         }
         $customer->first_name = $request->first_name;
         $customer->last_name = $request->last_name;
@@ -55,7 +55,7 @@ class CustomerController extends Controller
         $customer->phone = $request->phone;
         $customer->save();
 
-        return redirect()->route('customers.index')->with('customersuccess', $msg);
+        return redirect()->route('manage-book.index')->with('customersuccess', $msg);
 
     }
 
@@ -67,7 +67,7 @@ class CustomerController extends Controller
         $custData = Customer::orderBy('id','desc')->get();
 
         $updData = Customer::where('id' , $id)->first();
-        return View::make('customer', [
+        return View::make('book', [
             'custData' => $custData,
             'ban' => $updData,
         ]);
@@ -82,7 +82,7 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
         $customer->delete();
 
-        $msg = 'Customer deleted successfully.';
-        return redirect()->route('customers.index')->with('deletesuccess', $msg);
+        $msg = 'Book deleted successfully.';
+        return redirect()->route('manage-book.index')->with('deletesuccess', $msg);
     }
 }

@@ -31,10 +31,10 @@
                     @endif
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">@if(!empty($ban)) Update @else Add @endif Customer</h3>
+                            <h3 class="card-title">@if(!empty($ban)) Update @else Add @endif Book</h3>
                         </div>
 
-                        <form action="{{ route('customers.store') }}" role="form" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('manage-book.store') }}" role="form" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="@if(!empty($ban)){{ $ban['id'] }}@endif">
                             <div class="card-body">
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">@if(!empty($ban['id'])) Update @else Add  @endif Customer</button>
+                                <button type="submit" class="btn btn-primary">@if(!empty($ban['id'])) Update @else Add  @endif Book</button>
                             </div>
                         </form>
                     </div>
@@ -83,7 +83,7 @@
                     @endif
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Customer List</h3>
+                            <h3 class="card-title">Book List</h3>
                         </div>
                         <div class="card-body">
                             <table id="example" class="table table-bordered table-striped">
@@ -105,12 +105,12 @@
                                             <td style="text-align: ;">{{ $val->phone  }}</td>
                                             <td style="text-align: ;">
                                                 <div class="btn-group">
-                                                    <form method="POST" action="{{ route('customers.destroy', $val->id) }}">
+                                                    <form method="POST" action="{{ route('manage-book.destroy', $val->id) }}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fas fa-trash"></i></button>
                                                     </form>
-                                                    <a class="btn btn-small btn-warning" href="{{ URL::to('customers/' . $val->id) }}"><i class="fas fa-edit"></i></a>
+                                                    <a class="btn btn-small btn-warning" href="{{ URL::to('manage-book/' . $val->id) }}"><i class="fas fa-edit"></i></a>
 
                                                 </div>
                                             </td>
