@@ -8,7 +8,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item ">
-                <a href="{{ route('manage-book.index') }}" class="nav-link {{ (Request::segment(1) == 'manage-book') ? 'active' : ''}}">
+                <a href="{{ route('manage-book.index') }}" class="nav-link {{ (Request::segment(2) == 'manage-book') ? 'active' : ''}}">
                   <i class="nav-icon fas fa-book"></i>
                   <p>Manage Books</p>
                 </a>

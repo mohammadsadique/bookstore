@@ -22,13 +22,16 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BookController;
 
 
-Route::get('/', [LoginController::class , 'login'])->name('login');
+Route::get('/', [BookController::class , 'books'])->name('books');
+Route::get('admin/', [LoginController::class , 'login'])->name('login');
 Route::post('/submitlogin', [LoginController::class , 'submitlogin'])->name('submitlogin');
 Route::get('/logout', [LoginController::class , 'logout'])->name('logout');
+Route::get('/getdata', [BookController::class , 'getdata'])->name('getdata');
+Route::get('/viewbook/{id}', [BookController::class , 'viewbook'])->name('viewbook');
 
 Route::middleware([checkAdministratorLogin::class])->group(function () {
 
-    Route::resource('manage-book', BookController::class)->names([
+    Route::resource('admin/manage-book', BookController::class)->names([
         'index' => 'manage-book.index',
         'create' => 'manage-book.create',
         'store' => 'manage-book.store',

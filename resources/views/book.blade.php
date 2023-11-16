@@ -41,27 +41,57 @@
                                 <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label>First Name</label>
-                                                <input type="text" name="first_name" value="{{ old('first_name',  isset($ban) ? $ban['first_name'] : '') }}" class="form-control" placeholder="Enter ...">
+                                                <label>Publisher Name</label>
+                                                <input type="text" name="publisher" value="{{ old('publisher',  isset($ban) ? $ban['publisher'] : '') }}" class="form-control" placeholder="Enter ...">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label>Last Name</label>
-                                                <input type="text" name="last_name" class="form-control" value="{{ old('last_name', isset($ban) ? $ban['last_name'] : '') }}" placeholder="Enter ...">
+                                                <label>Title</label>
+                                                <input type="text" name="title" class="form-control" value="{{ old('title', isset($ban) ? $ban['title'] : '') }}" placeholder="Enter ...">
                                             </div>
                                         </div>
                                        
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label>Email</label>
-                                                <input type="email" name="email" value="{{ old('email', isset($ban) ? $ban['email'] : '') }}" class="form-control" placeholder="Enter ...">
+                                                <label>Author</label>
+                                                <input type="text" name="author" value="{{ old('author', isset($ban) ? $ban['author'] : '') }}" class="form-control" placeholder="Enter ...">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label>Phone</label>
-                                                <input type="tel" name="phone" class="form-control" value="{{ old('phone', isset($ban) ? $ban['phone'] : '') }}" placeholder="Enter ...">
+                                                <label>Genre</label>
+                                                <input type="text" name="genre" value="{{ old('genre', isset($ban) ? $ban['genre'] : '') }}" class="form-control" placeholder="Enter ...">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea name="description" id="description" cols="30" rows="5" class="form-control">@if(isset($ban)){{ $ban['description'] }}  @endif</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label>ISBN</label>
+                                                <input type="tel" name="isbn" class="form-control" value="{{ old('isbn', isset($ban) ? $ban['isbn'] : '') }}" placeholder="Enter ...">
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label>Image</label>
+                                                <input type="file" name="image" class="form-control" placeholder="Enter ...">
+                                                @if(isset($ban))
+                                                    <br>
+                                                    <img src="{{ $ban['image']  }}" alt="image" style="width:50px;height:50px;">
+                                                @endif 
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label>Published</label>
+                                                <input type="date" name="published" class="form-control" value="{{ old('published', isset($ban) ? $ban['published'] : '') }}" placeholder="Enter ...">
                                             </div>
                                         </div>
                                        
@@ -89,20 +119,26 @@
                             <table id="example" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
+                                        <th>Title</th>
+                                        <th>Image</th>
+                                        <th>Genre</th>
+                                        <th>Publisher</th>
                                         <th>Manage</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($custData as $val)
+                                    @foreach($bookData as $val)
                                         <tr>
-                                            <td style="text-align: ;">{{ $val->first_name }}</td>
-                                            <td style="text-align: ;">{{ $val->last_name  }}</td>
-                                            <td style="text-align: ;">{{ $val->email  }}</td>
-                                            <td style="text-align: ;">{{ $val->phone  }}</td>
+                                            <td style="text-align: ;">{{ $val->title }}</td>
+                                            <td style="text-align: ;">
+                                                @if(!empty( $val->image ))
+                                                    <img src="{{ $val->image  }}" alt="image" style="width:50px;height:50px;">
+                                                @else 
+                                                    <img src="{{ url('custom/dummy-logo.png') }}" alt="image" style="width:50px;height:50px;">
+                                                @endif
+                                            </td>
+                                            <td style="text-align: ;">{{ $val->genre  }}</td>
+                                            <td style="text-align: ;">{{ $val->publisher  }}</td>
                                             <td style="text-align: ;">
                                                 <div class="btn-group">
                                                     <form method="POST" action="{{ route('manage-book.destroy', $val->id) }}">
@@ -110,7 +146,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fas fa-trash"></i></button>
                                                     </form>
-                                                    <a class="btn btn-small btn-warning" href="{{ URL::to('manage-book/' . $val->id) }}"><i class="fas fa-edit"></i></a>
+                                                    <a class="btn btn-small btn-warning" href="{{ URL::to('admin/manage-book/' . $val->id) }}"><i class="fas fa-edit"></i></a>
 
                                                 </div>
                                             </td>

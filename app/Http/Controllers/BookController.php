@@ -7,8 +7,9 @@ use URL;
 use View;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
-use App\Models\Customer;
+use App\Models\BookDetail;
 
 class BookController extends Controller
 {
@@ -17,9 +18,10 @@ class BookController extends Controller
      */
     public function index()
     {
-        $custData = Customer::orderBy('id','desc')->get();
-        return view('book', compact('custData'));
+        $bookData = BookDetail::orderBy('id','desc')->get();
+        return view('book', compact('bookData'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -36,24 +38,36 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|regex:/^\d{10}$/',
+            'title' => 'required',
+            'author' => 'required',
+            'publisher' => 'required',
         ]);
     
         if(!empty($request->id)){
-            $customer = Customer::find($request->id);
+            $book = BookDetail::find($request->id);
             $msg = 'Book updated successfully.';
         } else {
-            $customer = new Customer;
+            $book = new BookDetail;
             $msg = 'Book added successfully.';
         }
-        $customer->first_name = $request->first_name;
-        $customer->last_name = $request->last_name;
-        $customer->email = $request->email;
-        $customer->phone = $request->phone;
-        $customer->save();
+
+        if($request->file('image')){
+            $originName = $request->file('image')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileName = $fileName.'_'.time().'.'.$extension;
+        
+            $request->file('image')->move(public_path('custom/images'), $fileName);
+            $book->image = url('custom/images').'/'.$fileName;
+        }
+        $book->title = $request->title;
+        $book->author = $request->author;
+        $book->genre = $request->genre;
+        $book->description = $request->description;
+        $book->isbn = $request->isbn;
+        $book->published = $request->published;
+        $book->publisher = $request->publisher;
+        $book->save();
 
         return redirect()->route('manage-book.index')->with('customersuccess', $msg);
 
@@ -64,11 +78,11 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $custData = Customer::orderBy('id','desc')->get();
+        $bookData = BookDetail::orderBy('id','desc')->get();
 
-        $updData = Customer::where('id' , $id)->first();
+        $updData = BookDetail::where('id' , $id)->first();
         return View::make('book', [
-            'custData' => $custData,
+            'bookData' => $bookData,
             'ban' => $updData,
         ]);
     }
@@ -79,10 +93,46 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->delete();
+        $del = BookDetail::findOrFail($id);
+        $del->delete();
 
         $msg = 'Book deleted successfully.';
         return redirect()->route('manage-book.index')->with('deletesuccess', $msg);
+    }
+
+    public function getdata() {
+        $url = 'https://fakerapi.it/api/v1/books?_quantity=100';
+        $response = Http::get($url);
+        if ($response->successful()) {
+            $data = $response->json(); 
+            foreach($data['data'] as $getData){
+                $book = new BookDetail;
+                $book->title = $getData['title'];
+                $book->author = $getData['author'];
+                $book->genre = $getData['genre'];
+                $book->description = $getData['description'];
+                $book->isbn = $getData['isbn'];
+                $book->image = $getData['image'];
+                $book->published = $getData['published'];
+                $book->publisher = $getData['publisher'];
+                $book->save();
+
+            }
+            return 'Book details are insert into database.';
+
+        } else {
+            return "Failed to fetch data: " . $response->status();
+        }
+   
+    }
+    public function books()
+    {
+        $bookData = BookDetail::orderBy('id','desc')->limit(10)->get();
+        return view('showbooks', compact('bookData'));
+    }
+    public function viewbook($id) {
+        $bookData = BookDetail::where('id', $id)->first();
+        return view('viewbook', compact('bookData'));
+
     }
 }
