@@ -83,7 +83,7 @@
                                                 <input type="file" name="image" class="form-control" placeholder="Enter ...">
                                                 @if(isset($ban))
                                                     <br>
-                                                    <img src="{{ $ban['image']  }}" alt="image" style="width:50px;height:50px;">
+                                                    <img src="{{ $ban['image'] }}" onerror="this.onerror=null;this.src='{{ url('custom/dummy-logo.png') }}';" alt="mage" style="width:50px;height:50px;">
                                                 @endif 
                                             </div>
                                         </div>
@@ -116,7 +116,7 @@
                             <h3 class="card-title">Book List</h3>
                         </div>
                         <div class="card-body">
-                            <table id="example" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Title</th>
@@ -132,7 +132,7 @@
                                             <td style="text-align: ;">{{ $val->title }}</td>
                                             <td style="text-align: ;">
                                                 @if(!empty( $val->image ))
-                                                    <img src="{{ $val->image  }}" alt="image" style="width:50px;height:50px;">
+                                                    <img src="{{ $val->image }}" onerror="this.onerror=null;this.src='{{ url('custom/dummy-logo.png') }}';" alt="image" style="width:50px;height:50px;">
                                                 @else 
                                                     <img src="{{ url('custom/dummy-logo.png') }}" alt="image" style="width:50px;height:50px;">
                                                 @endif
@@ -154,6 +154,37 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="col-md-12 pt-2">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        @if ($bookData->onFirstPage())
+                                            <li class="page-item disabled">
+                                                <span class="page-link">&laquo;</span>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $bookData->previousPageUrl() }}" rel="prev">&laquo;</a>
+                                            </li>
+                                        @endif
+
+                                        @foreach ($bookData->getUrlRange(1, $bookData->lastPage()) as $page => $url)
+                                            <li class="page-item {{ ($page == $bookData->currentPage()) ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endforeach
+
+                                        @if ($bookData->hasMorePages())
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $bookData->nextPageUrl() }}" rel="next">&raquo;</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item disabled">
+                                                <span class="page-link">&raquo;</span>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $bookData = BookDetail::orderBy('id','desc')->get();
+        $bookData = BookDetail::orderBy('id','desc')->paginate(10);
         return view('book', compact('bookData'));
     }
     
@@ -78,7 +78,8 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $bookData = BookDetail::orderBy('id','desc')->get();
+        // $bookData = BookDetail::orderBy('id','desc')->get();
+        $bookData = BookDetail::orderBy('id','desc')->paginate(10);
 
         $updData = BookDetail::where('id' , $id)->first();
         return View::make('book', [
@@ -127,7 +128,7 @@ class BookController extends Controller
     }
     public function books()
     {
-        $bookData = BookDetail::orderBy('id','desc')->limit(10)->get();
+        $bookData = BookDetail::orderBy('id','desc')->paginate(10);
         return view('showbooks', compact('bookData'));
     }
     public function viewbook($id) {
@@ -135,4 +136,5 @@ class BookController extends Controller
         return view('viewbook', compact('bookData'));
 
     }
+    
 }

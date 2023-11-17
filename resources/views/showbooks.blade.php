@@ -6,42 +6,76 @@
         <div class="w3-row-padding" id="about">
             <div class="w3-center w3-padding-64">
                 <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">
-                    <div class="input-group">
-                        <div class="form-outline">
-                            <input type="search" id="form1" class="form-control" placeholder="Search Books..." />
-                            <button type="button" class="btn btn-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
+                    <div class="input-group mb-3 rounded-pill border">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text border-0 bg-transparent" id="searchIcon">
+                            <i class="bi bi-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control border-0" placeholder="Search Books:-  By title, author, publication date, ISBN and genre." aria-label="Search Google" aria-describedby="searchIcon">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary bg-transparent border-0" type="button"></button>
                         </div>
                     </div>
                 </span>
             </div>
             @foreach($bookData as $val)
-                <div class="w3-third w3-margin-bottom">
-                    <ul class="w3-ul w3-border w3-center w3-hover-shadow">
-                        <li>
-                            <div class="w3-card-4">
-                                @if(!empty( $val->image ))
-                                    <img src="{{ $val->image }}" onerror="this.onerror=null;this.src='{{ url('custom/dummy-logo.png') }}';" alt="mage" style="width:345px;height:230px;">
-                                @else 
-                                    <img src="{{ url('custom/dummy-logo.png') }}" alt="image" style="width:345px;height:230px;">
-                                @endif
-                                <div class="w3-container">
-                                <h3>
-                                    @php
-                                        $name = $val->title;
-                                        $limitedName = strlen($name) > 28 ? substr($name, 0, 28) . '...' : $name;
-                                        echo $limitedName;
-                                    @endphp
-                                </h3>
-                                <p>{{ $val->author }}</p>
-                                <p><a href="{{ route('viewbook' , $val->id) }}" class="w3-button w3-light-grey w3-block">View</a></p>
-                                </div>
+            <div class="w3-third w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-center w3-hover-shadow">
+                    <li>
+                        <div class="w3-card-4">
+                            @if(!empty( $val->image ))
+                                <img src="{{ $val->image }}" onerror="this.onerror=null;this.src='{{ url('custom/dummy-logo.png') }}';" alt="mage" style="width:345px;height:230px;">
+                            @else 
+                                <img src="{{ url('custom/dummy-logo.png') }}" alt="image" style="width:345px;height:230px;">
+                            @endif
+                            <div class="w3-container">
+                            <h3>
+                                @php
+                                    $name = $val->title;
+                                    $limitedName = strlen($name) > 25 ? substr($name, 0, 25) . '...' : $name;
+                                    echo $limitedName;
+                                @endphp
+                            </h3>
+                            <p>{{ $val->author }}</p>
+                            <p><a href="{{ route('viewbook' , $val->id) }}" class="w3-button w3-light-grey w3-block">View</a></p>
                             </div>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
             @endforeach
+        </div>
+        <div class="col-md-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if ($bookData->onFirstPage())
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $bookData->previousPageUrl() }}" rel="prev">&laquo;</a>
+                        </li>
+                    @endif
+
+                    @foreach ($bookData->getUrlRange(1, $bookData->lastPage()) as $page => $url)
+                        <li class="page-item {{ ($page == $bookData->currentPage()) ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        </li>
+                    @endforeach
+
+                    @if ($bookData->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $bookData->nextPageUrl() }}" rel="next">&raquo;</a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
         </div>
     </div>
 @endsection
