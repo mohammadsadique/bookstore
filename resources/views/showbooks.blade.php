@@ -4,7 +4,7 @@
     <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
         <!-- Grid -->
         <div class="w3-row-padding" id="about">
-            <div class="w3-center w3-padding-64">
+            <div class="w3-center w3-padding-64 inputSearch">
                 <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">
                     <div class="input-group mb-3 rounded-pill border">
                         <div class="input-group-prepend">
@@ -12,70 +12,54 @@
                             <i class="bi bi-search"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control border-0" placeholder="Search Books:-  By title, author, publication date, ISBN and genre." aria-label="Search Google" aria-describedby="searchIcon">
+                        <input type="text" id="searchBook" class="form-control border-0" placeholder="Search Books:-  By title, author, publication date, ISBN and genre." aria-label="Search Google" aria-describedby="searchIcon">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary bg-transparent border-0" type="button"></button>
                         </div>
                     </div>
                 </span>
             </div>
-            @foreach($bookData as $val)
-            <div class="w3-third w3-margin-bottom">
-                <ul class="w3-ul w3-border w3-center w3-hover-shadow">
-                    <li>
-                        <div class="w3-card-4">
-                            @if(!empty( $val->image ))
-                                <img src="{{ $val->image }}" onerror="this.onerror=null;this.src='{{ url('custom/dummy-logo.png') }}';" alt="mage" style="width:345px;height:230px;">
-                            @else 
-                                <img src="{{ url('custom/dummy-logo.png') }}" alt="image" style="width:345px;height:230px;">
-                            @endif
-                            <div class="w3-container">
-                            <h3>
-                                @php
-                                    $name = $val->title;
-                                    $limitedName = strlen($name) > 25 ? substr($name, 0, 25) . '...' : $name;
-                                    echo $limitedName;
-                                @endphp
-                            </h3>
-                            <p>{{ $val->author }}</p>
-                            <p><a href="{{ route('viewbook' , $val->id) }}" class="w3-button w3-light-grey w3-block">View</a></p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            @endforeach
+            <span class="content"></span>
         </div>
-        <div class="col-md-12">
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @if ($bookData->onFirstPage())
-                        <li class="page-item disabled">
-                            <span class="page-link">&laquo;</span>
-                        </li>
-                    @else
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $bookData->previousPageUrl() }}" rel="prev">&laquo;</a>
-                        </li>
-                    @endif
-
-                    @foreach ($bookData->getUrlRange(1, $bookData->lastPage()) as $page => $url)
-                        <li class="page-item {{ ($page == $bookData->currentPage()) ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-
-                    @if ($bookData->hasMorePages())
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $bookData->nextPageUrl() }}" rel="next">&raquo;</a>
-                        </li>
-                    @else
-                        <li class="page-item disabled">
-                            <span class="page-link">&raquo;</span>
-                        </li>
-                    @endif
-                </ul>
-            </nav>
-        </div>
+        <span class="pagination"></span>
     </div>
+@endsection
+@section("js")
+<script>
+ 
+        function fetchBooks(searchBy,page,data) {
+            $.ajax({
+                url: "{{route('search')}}",
+                type: 'POST',
+                data: {all: searchBy , searchInput: data, page: page},
+                datatype: "json",
+                success: function(res){
+                    $('.content').html(res.content);
+                    $('.pagination').html(res.pagination);
+                }
+            });
+        }
+        $(document).on('keyup','#searchBook',function(e){
+            e.preventDefault(); 
+            let data = $('#searchBook').val();
+            if (data === null || data.trim() === "") {
+                fetchBooks('yes',1,'');
+            } else {
+                fetchBooks('no',1,data);
+            }
+        });
+        $(document).ready(function() {
+            fetchBooks('yes',1,'');
+        });
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            let data = $('#searchBook').val();
+            if (data === null || data.trim() === "") {
+                fetchBooks('yes',page,'');
+            } else {
+                fetchBooks('no',page,data);
+            }
+        });
+        </script>
 @endsection

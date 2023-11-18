@@ -17,7 +17,7 @@
                 <h5 class=""><b>ISBN :- </b> {{ $bookData->isbn }}</h5>
                 <h5 class=""><b>Publisher :- </b> {{ $bookData->publisher }}</h5>
                 <p class="w3-large w3-text-grey w3-hide-medium">{{ $bookData->description }}</p>
-                <h5 class="w3-right"><b>Published Date :- </b> {{ date('d-m-Y' , strtotime($bookData->published)) }}</h5>
+                <h5 class="w3-right"><b>Published Date :- </b> {{ date('F j, Y' , strtotime($bookData->published)) }}</h5>
             </div>
             </div>
             @endif

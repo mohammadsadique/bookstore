@@ -29,6 +29,8 @@ Route::get('/logout', [LoginController::class , 'logout'])->name('logout');
 Route::get('/getdata', [BookController::class , 'getdata'])->name('getdata');
 Route::get('/viewbook/{id}', [BookController::class , 'viewbook'])->name('viewbook');
 
+Route::post('/search', [BookController::class, 'search'])->name('search');
+
 Route::middleware([checkAdministratorLogin::class])->group(function () {
 
     Route::resource('admin/manage-book', BookController::class)->names([
